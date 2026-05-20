@@ -1,0 +1,23 @@
+{
+  "navHome": "Home",
+  "navAdmin": "Admin Portal",
+  "parishName": "St. Arokiya Madha Church",
+  "tagline": "A home of faith, a family of love, a beacon of hope and healing.",
+  "heroCta": "Join Our Community",
+  "feastBanner": "Upcoming Feast: Our Lady of Good Health Annual Feast on August 29th! Join us for the flag hoisting.",
+  "massTimingsTitle": "Mass & Worship Schedule",
+  "massSunday": "Sunday Mass",
+  "massWeekday": "Weekday Mass",
+  "massAdoration": "Eucharistic Adoration",
+  "actions": {
+    "donate": "Donate",
+    "prayerRequest": "Prayer Request",
+    "watchLive": "Watch Live Mass",
+    "contact": "Contact Us"
+  },
+  "dailyVerse": "Daily Bible Verse",
+  "todaysSaint": "Today's Saint",
+  "thoughtOfDay": "Thought of the Day",
+  "adminTitle": "Arokiya Madha Panel",
+  "adminWelcome": "Parish Administration Center"
+}
