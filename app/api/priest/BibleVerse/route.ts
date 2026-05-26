@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
-import BibleVerse from "../../../../models/BibleVerse";
+import BibleVerse from "@/models/BibleVerse";
 
 // GET ALL VERSES
 export async function GET() {

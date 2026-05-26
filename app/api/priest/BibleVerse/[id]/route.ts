@@ -12,7 +12,8 @@ export async function GET(
 
     const { id } = await context.params;
 
-    const verse = await BibleVerse.findById(String(id));
+    // 🌟 FIX: Use findById directly to prevent Mongoose filter query inference issues
+    const verse = await BibleVerse.findById(id);
 
     return NextResponse.json({
       success: true,
@@ -40,10 +41,10 @@ export async function PUT(
     await connectDB();
 
     const { id } = await context.params;
-
     const body = await req.json();
 
-    const updatedVerse = await BibleVerse.findByIdAndUpdate(String(id), body, {
+    // 🌟 FIX: Use findByIdAndUpdate directly with the ID string
+    const updatedVerse = await BibleVerse.findByIdAndUpdate(id, body, {
       new: true,
     });
 
@@ -75,7 +76,8 @@ export async function DELETE(
 
     const { id } = await context.params;
 
-    await BibleVerse.findByIdAndDelete(String(id));
+    // 🌟 FIX: Use findByIdAndDelete directly with the ID string
+    await BibleVerse.findByIdAndDelete(id);
 
     return NextResponse.json({
       success: true,

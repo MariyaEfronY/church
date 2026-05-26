@@ -38,6 +38,6 @@ const BibleVerseSchema = new Schema(
 );
 
 const BibleVerse =
-  models.BibleVerse || mongoose.model("BibleVerse", BibleVerseSchema);
-
+  (models.BibleVerse as mongoose.Model<any>) ||
+  mongoose.model("BibleVerse", BibleVerseSchema);
 export default BibleVerse;
