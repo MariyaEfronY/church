@@ -1,62 +1,57 @@
-import mongoose, { Schema, models, model } from "mongoose";
-
-const PriestSchema = new Schema(
-  {
-    nameEnglish: {
-      type: String,
-      required: true,
-    },
-
-    nameTamil: {
-      type: String,
-    },
-
-    role: {
-      type: String,
-      default: "Priest",
-    },
-  },
-  { _id: false },
-);
+import mongoose, { Schema, models } from "mongoose";
 
 const MassTimingSchema = new Schema(
   {
-    dayEnglish: {
+    titleTamil: {
       type: String,
-      required: true,
+      required: [true, "திருப்பலி பெயர் அவசியம்"],
+    },
+
+    massTypeTamil: {
+      type: String,
+      enum: ["வழக்கமான திருப்பலி", "சிறப்பு திருப்பலி"],
+      default: "வழக்கமான திருப்பலி",
     },
 
     dayTamil: {
       type: String,
+      required: [true, "கிழமை அவசியம்"],
     },
 
-    timing: {
+    massDate: {
+      type: Date,
+    },
+
+    timeTamil: {
       type: String,
-      required: true,
+      required: [true, "நேரம் அவசியம்"],
+    },
+
+    placeTypeTamil: {
+      type: String,
+      enum: ["பங்கு ஆலயம்", "கிராம ஆலயம்"],
+      default: "பங்கு ஆலயம்",
+    },
+
+    placeNameTamil: {
+      type: String,
+      required: [true, "ஆலய பெயர் அவசியம்"],
+    },
+
+    priestNameTamil: {
+      type: String,
+    },
+
+    descriptionTamil: {
+      type: String,
     },
 
     language: {
       type: String,
-      enum: ["Tamil", "English", "Both"],
-      default: "Tamil",
+      default: "தமிழ்",
     },
 
-    specialMass: {
-      type: Boolean,
-      default: false,
-    },
-
-    priests: [PriestSchema],
-
-    notesEnglish: {
-      type: String,
-    },
-
-    notesTamil: {
-      type: String,
-    },
-
-    isActive: {
+    active: {
       type: Boolean,
       default: true,
     },
@@ -66,6 +61,7 @@ const MassTimingSchema = new Schema(
   },
 );
 
-const MassTiming = models.MassTiming || model("MassTiming", MassTimingSchema);
+const MassTiming =
+  models.MassTiming || mongoose.model("MassTiming", MassTimingSchema);
 
 export default MassTiming;
