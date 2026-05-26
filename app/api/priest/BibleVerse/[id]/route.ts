@@ -3,19 +3,24 @@ import { connectDB } from "../../../../lib/mongodb";
 import BibleVerse from "../../../../models/BibleVerse";
 
 // GET SINGLE VERSE
-export async function GET(req: Request, context: any) {
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     await connectDB();
 
     const { id } = await context.params;
 
-    const verse = await BibleVerse.findById(id);
+    const verse = await BibleVerse.findById(String(id));
 
     return NextResponse.json({
       success: true,
       data: verse,
     });
   } catch (error) {
+    console.log(error);
+
     return NextResponse.json(
       {
         success: false,
@@ -27,7 +32,10 @@ export async function GET(req: Request, context: any) {
 }
 
 // UPDATE VERSE
-export async function PUT(req: Request, context: any) {
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     await connectDB();
 
@@ -35,8 +43,8 @@ export async function PUT(req: Request, context: any) {
 
     const body = await req.json();
 
-    const updatedVerse = await BibleVerse.findByIdAndUpdate(id, body, {
-      returnDocument: "after",
+    const updatedVerse = await BibleVerse.findByIdAndUpdate(String(id), body, {
+      new: true,
     });
 
     return NextResponse.json({
@@ -58,13 +66,16 @@ export async function PUT(req: Request, context: any) {
 }
 
 // DELETE VERSE
-export async function DELETE(req: Request, context: any) {
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     await connectDB();
 
     const { id } = await context.params;
 
-    await BibleVerse.findByIdAndDelete(id);
+    await BibleVerse.findByIdAndDelete(String(id));
 
     return NextResponse.json({
       success: true,

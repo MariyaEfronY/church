@@ -2,10 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { Languages } from "lucide-react";
+import { Noto_Sans_Tamil } from "next/font/google";
+
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
+
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
+
+const tamilFont = Noto_Sans_Tamil({
+    weight: ["400", "500", "700"],
+});
 
 export default function PublicLayout({
     children,
@@ -17,25 +24,32 @@ export default function PublicLayout({
     // Load saved preference on mount
     useEffect(() => {
         const savedLang = localStorage.getItem("church-lang") as "en" | "ta";
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+
         if (savedLang) setLang(savedLang);
     }, []);
 
     const toggleLanguage = () => {
         const nextLang = lang === "en" ? "ta" : "en";
+
         setLang(nextLang);
+
         localStorage.setItem("church-lang", nextLang);
 
-        // Broadcast language change to the active pages inside this group layout
-        const event = new CustomEvent("church-lang-change", { detail: nextLang });
+        // Broadcast language change
+        const event = new CustomEvent("church-lang-change", {
+            detail: nextLang,
+        });
+
         window.dispatchEvent(event);
     };
 
     const t = lang === "en" ? en : ta;
 
     return (
-        <div className="min-h-screen flex flex-col justify-between">
-            {/* Dynamic Floating Language Switch Button */}
+        <div
+            className={`${tamilFont.className} min-h-screen flex flex-col justify-between`}
+        >
+            {/* Floating Language Switch */}
             <div className="fixed bottom-6 right-6 z-50">
                 <button
                     onClick={toggleLanguage}
@@ -47,7 +61,11 @@ export default function PublicLayout({
             </div>
 
             <div>
-                <Navigation parishName={t.parishName} adminText={t.navAdmin} />
+                <Navigation
+                    parishName={t.parishName}
+                    adminText={t.navAdmin}
+                />
+
                 <main>{children}</main>
             </div>
 
