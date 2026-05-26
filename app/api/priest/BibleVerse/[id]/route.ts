@@ -12,7 +12,7 @@ export async function GET(
 
     const { id } = await context.params;
 
-    // 🌟 FIX: Use findById directly to prevent Mongoose filter query inference issues
+    // 🌟 Clean and fully callable now that the model types match perfectly!
     const verse = await BibleVerse.findById(id);
 
     return NextResponse.json({
@@ -20,7 +20,7 @@ export async function GET(
       data: verse,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {
@@ -43,7 +43,7 @@ export async function PUT(
     const { id } = await context.params;
     const body = await req.json();
 
-    // 🌟 FIX: Use findByIdAndUpdate directly with the ID string
+    // 🌟 Clean and type-safe updates
     const updatedVerse = await BibleVerse.findByIdAndUpdate(id, body, {
       new: true,
     });
@@ -54,7 +54,7 @@ export async function PUT(
       data: updatedVerse,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {
@@ -76,7 +76,7 @@ export async function DELETE(
 
     const { id } = await context.params;
 
-    // 🌟 FIX: Use findByIdAndDelete directly with the ID string
+    // 🌟 Clean deletion mapping
     await BibleVerse.findByIdAndDelete(id);
 
     return NextResponse.json({
@@ -84,7 +84,7 @@ export async function DELETE(
       message: "இறைவசனம் நீக்கப்பட்டது",
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {

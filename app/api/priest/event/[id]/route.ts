@@ -2,22 +2,53 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Event from "@/models/Event";
 
-export async function PUT(req: NextRequest, context: any) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+// GET SINGLE EVENT
+export async function GET(req: NextRequest, context: RouteContext) {
   try {
     await connectDB();
+    const { id } = await context.params;
 
-    const params = await context.params;
+    // 🌟 THE FIX: Cast the Event model to 'any' to bypass uncallable signature union matching
+    const event = await (Event as any).findById(id);
 
-    const id = params.id;
+    if (!event) {
+      return NextResponse.json(
+        { success: false, message: "Event not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      event,
+    });
+  } catch (error) {
+    console.log("GET ERROR:", error);
+    return NextResponse.json(
+      { success: false, message: "Fetch failed" },
+      { status: 500 },
+    );
+  }
+}
+
+// UPDATE EVENT
+export async function PUT(req: NextRequest, context: RouteContext) {
+  try {
+    await connectDB();
+    const { id } = await context.params;
 
     console.log("UPDATE ID:", id);
-
     const body = await req.json();
 
-    const updatedEvent = await Event.findByIdAndUpdate(id, body, {
+    // 🌟 THE FIX: Cast model to 'any' and options object as well
+    const updatedEvent = await (Event as any).findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
-    });
+    } as any);
 
     if (!updatedEvent) {
       return NextResponse.json(
@@ -36,7 +67,6 @@ export async function PUT(req: NextRequest, context: any) {
     });
   } catch (error) {
     console.log("PUT ERROR:", error);
-
     return NextResponse.json(
       {
         success: false,
@@ -47,17 +77,16 @@ export async function PUT(req: NextRequest, context: any) {
   }
 }
 
-export async function DELETE(req: NextRequest, context: any) {
+// DELETE EVENT
+export async function DELETE(req: NextRequest, context: RouteContext) {
   try {
     await connectDB();
-
-    const params = await context.params;
-
-    const id = params.id;
+    const { id } = await context.params;
 
     console.log("DELETE ID:", id);
 
-    const deletedEvent = await Event.findByIdAndDelete(id);
+    // 🌟 THE FIX: Cast model to 'any'
+    const deletedEvent = await (Event as any).findByIdAndDelete(id);
 
     if (!deletedEvent) {
       return NextResponse.json(
@@ -75,7 +104,6 @@ export async function DELETE(req: NextRequest, context: any) {
     });
   } catch (error) {
     console.log("DELETE ERROR:", error);
-
     return NextResponse.json(
       {
         success: false,

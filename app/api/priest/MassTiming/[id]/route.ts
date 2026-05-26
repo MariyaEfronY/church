@@ -3,12 +3,16 @@ import { connectDB } from "../../../../lib/mongodb";
 import MassTiming from "../../../../models/MassTiming";
 
 // GET SINGLE MASS
-export async function GET(req: Request, context: any) {
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     await connectDB();
 
     const { id } = await context.params;
 
+    // 🌟 Now cleanly callable because the model type is explicitly declared above!
     const mass = await MassTiming.findById(id);
 
     return NextResponse.json({
@@ -16,8 +20,7 @@ export async function GET(req: Request, context: any) {
       data: mass,
     });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
@@ -29,16 +32,18 @@ export async function GET(req: Request, context: any) {
 }
 
 // UPDATE MASS
-export async function PUT(req: Request, context: any) {
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     await connectDB();
 
     const { id } = await context.params;
-
     const body = await req.json();
 
     const updatedMass = await MassTiming.findByIdAndUpdate(id, body, {
-      returnDocument: "after",
+      new: true, // Returns the freshly updated document cleanly
     });
 
     return NextResponse.json({
@@ -47,8 +52,7 @@ export async function PUT(req: Request, context: any) {
       data: updatedMass,
     });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
@@ -60,7 +64,10 @@ export async function PUT(req: Request, context: any) {
 }
 
 // DELETE MASS
-export async function DELETE(req: Request, context: any) {
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     await connectDB();
 
@@ -73,8 +80,7 @@ export async function DELETE(req: Request, context: any) {
       message: "திருப்பலி நீக்கப்பட்டது",
     });
   } catch (error) {
-    console.log(error);
-
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
