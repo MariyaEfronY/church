@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     Sparkles,
     Clock,
@@ -11,12 +11,62 @@ import {
     Calendar,
     CheckCircle2,
     AlertCircle,
-    ArrowUpRight,
-    TrendingUp
+    TrendingUp,
+    Mail
 } from "lucide-react";
 
+interface UserSession {
+    name: string;
+    email: string;
+    role: string;
+}
+
 export default function PriestDashboardHome() {
-    const [completedDuties, setCompletedDuties] = useState<number[]>([0]); // Tracks completed duties locally
+    const [completedDuties, setCompletedDuties] = useState<number[]>([0]);
+    const [priestData, setPriestData] = useState<UserSession | null>(null);
+    const [currentTime, setCurrentTime] = useState<string>("");
+
+    // 🔄 Fetch Logged-in credentials on client mount
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user-session");
+        if (storedUser) {
+            try {
+                setPriestData(JSON.parse(storedUser));
+            } catch (error) {
+                console.error("Failed to parse user session parameters:", error);
+            }
+        }
+    }, []);
+
+    // ⏰ Live ticking system clock configuration engine
+    useEffect(() => {
+        const formatClock = () => {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+        };
+
+        setCurrentTime(formatClock()); // Set initial value on client
+        const clockTicker = setInterval(() => {
+            setCurrentTime(formatClock());
+        }, 1000);
+
+        return () => clearInterval(clockTicker);
+    }, []);
+
+    const getDynamicGreeting = () => {
+        if (!currentTime) return "Welcome";
+
+        // Parse the hour from our current time string or create a quick fallback date check
+        const currentHour = new Date().getHours();
+
+        if (currentHour < 12) {
+            return "Good Morning";
+        } else if (currentHour < 17) {
+            return "Good Afternoon";
+        } else {
+            return "Good Evening";
+        }
+    };
 
     const toggleDuty = (index: number) => {
         if (completedDuties.includes(index)) {
@@ -51,28 +101,49 @@ export default function PriestDashboardHome() {
 
             {/* 1. Dignified Liturgical Welcome Banner */}
             <header className="bg-white rounded-2xl p-6 shadow-xs border border-stone-200/80 flex flex-col lg:flex-row justify-between lg:items-center gap-6">
-                <div>
+                <div className="space-y-1.5">
                     <div className="flex items-center gap-2 text-amber-800 font-medium text-xs uppercase tracking-widest">
                         <UserCheck className="w-4 h-4 text-amber-700" />
                         <span>Pax Vobiscum • Peace be with you</span>
                     </div>
-                    <h1 className="text-2xl md:text-3xl font-serif font-bold text-stone-900 mt-1">
-                        Welcome Father,
+
+                    {/* ☀️ Dynamic Greeting Added Here */}
+                    <h1 className="text-2xl md:text-3xl font-serif font-black text-stone-900 tracking-tight">
+                        {getDynamicGreeting()}, {priestData?.name || "Rev. Fr. Parish Priest"}
                     </h1>
-                    <p className="text-stone-500 text-sm mt-0.5">
-                        Here is the spiritual heartbeat and administrative summary of St. Arokiya Madha Church today.
-                    </p>
+
+                    {/* Node Access Parameters */}
+                    <div className="flex items-center gap-2 text-stone-400 text-xs font-mono bg-stone-50 border border-stone-200/60 rounded-lg px-2.5 py-1 w-max">
+                        <Mail className="w-3.5 h-3.5 text-stone-400" />
+                        <span>{priestData?.email || "pastor@parish.org"}</span>
+                        <span className="text-stone-300">|</span>
+                        <span className="text-amber-700 font-bold uppercase tracking-wider text-[10px]">
+                            {priestData?.role || "Clergy"} Clearance
+                        </span>
+                    </div>
                 </div>
 
-                {/* Liturgical Context Card */}
-                <div className="bg-stone-50 px-5 py-3 rounded-xl border border-stone-200/60 flex items-center gap-4 self-start lg:self-center">
-                    <Clock className="w-5 h-5 text-amber-700 flex-shrink-0" />
-                    <div className="text-left">
-                        <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Liturgical Season</div>
-                        <div className="text-sm font-serif font-bold text-stone-800">Ordinary Time</div>
-                        <div className="text-[11px] text-stone-500">Vestment Color: Green</div>
+                <div className="flex flex-wrap items-center gap-4 self-start lg:self-center">
+                    {/* Live System Ticking Clock Node */}
+                    <div className="bg-stone-900 text-white px-5 py-3 rounded-xl border border-stone-950 flex items-center gap-3.5 shadow-sm min-w-[150px]">
+                        <Clock className="w-4 h-4 text-amber-400 animate-pulse flex-shrink-0" />
+                        <div>
+                            <div className="text-[9px] text-stone-400 font-bold uppercase tracking-widest">Active Workspace Time</div>
+                            <div className="text-sm font-mono font-bold text-amber-300 tracking-wider">
+                                {currentTime || "--:--:-- --"}
+                            </div>
+                        </div>
                     </div>
-                    <div className="w-3 h-7 bg-emerald-700 rounded-xs ml-2 shadow-xs" title="Liturgical Green" />
+
+                    {/* Liturgical Context Card */}
+                    <div className="bg-stone-50 px-5 py-3 rounded-xl border border-stone-200/60 flex items-center gap-4 shadow-xs">
+                        <div className="text-left">
+                            <div className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Liturgical Season</div>
+                            <div className="text-sm font-serif font-bold text-stone-800">Ordinary Time</div>
+                            <div className="text-[11px] text-stone-500">Vestment Color: Green</div>
+                        </div>
+                        <div className="w-3 h-8 bg-emerald-700 rounded-xs ml-2 shadow-xs" title="Liturgical Green" />
+                    </div>
                 </div>
             </header>
 
@@ -98,7 +169,7 @@ export default function PriestDashboardHome() {
             {/* 3. Main Split Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                {/* Interactive Pastoral Duties & Schedule (Takes 2 Columns) */}
+                {/* Interactive Pastoral Duties & Schedule */}
                 <div className="lg:col-span-2 bg-white rounded-2xl border border-stone-200/80 shadow-xs p-6">
                     <div className="flex items-center justify-between pb-4 mb-6 border-b border-stone-100">
                         <div className="flex items-center gap-2">
@@ -118,8 +189,8 @@ export default function PriestDashboardHome() {
                                     key={index}
                                     onClick={() => toggleDuty(index)}
                                     className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-4 select-none ${isDone
-                                            ? "bg-stone-50/80 border-stone-200 opacity-60 line-through"
-                                            : "bg-white border-stone-200 shadow-xs hover:border-amber-600/40 hover:bg-stone-50/30"
+                                        ? "bg-stone-50/80 border-stone-200 opacity-60 line-through"
+                                        : "bg-white border-stone-200 shadow-xs hover:border-amber-600/40 hover:bg-stone-50/30"
                                         }`}
                                 >
                                     <button className="mt-0.5 focus:outline-none flex-shrink-0">
@@ -142,7 +213,7 @@ export default function PriestDashboardHome() {
                     </div>
                 </div>
 
-                {/* Recent Notifications & Parish Notices Drawer (Takes 1 Column) */}
+                {/* Recent Notifications & Parish Notices Drawer */}
                 <div className="bg-white rounded-2xl border border-stone-200/80 shadow-xs p-6 flex flex-col justify-between">
                     <div>
                         <div className="flex items-center gap-2 pb-4 mb-4 border-b border-stone-100">
@@ -153,8 +224,8 @@ export default function PriestDashboardHome() {
                         <div className="space-y-4">
                             {quickAnnouncements.map((ann, i) => (
                                 <div key={i} className={`p-4 rounded-xl border transition-colors ${ann.urgent
-                                        ? "bg-rose-50/40 border-rose-100 hover:bg-rose-50/70"
-                                        : "bg-stone-50/50 border-stone-200/40 hover:bg-stone-50"
+                                    ? "bg-rose-50/40 border-rose-100 hover:bg-rose-50/70"
+                                    : "bg-stone-50/50 border-stone-200/40 hover:bg-stone-50"
                                     }`}>
                                     <div className="flex justify-between items-center mb-1.5">
                                         <span className={`text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${ann.urgent ? "bg-rose-100 text-rose-800" : "bg-stone-200 text-stone-700"
