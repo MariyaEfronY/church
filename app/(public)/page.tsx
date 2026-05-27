@@ -5,6 +5,7 @@ import HeroBanner from "./components/HeroBanner";
 import DevotionCards from "./components/DevotionCards";
 import LiturgicalTimings from "./components/LiturgicalTimings";
 import QuickActions from "./components/QuickActions";
+import YoutubeVideos from "./components/YoutubeVideos";
 
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
@@ -44,6 +45,8 @@ export default function PublicHomePage() {
 
             {/* 4. Elegant Dynamic Utility Grid */}
             <QuickActions t={t} lang={lang} />
+
+            <YoutubeVideos />
         </div>
     );
 }
