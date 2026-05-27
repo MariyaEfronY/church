@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { Languages } from "lucide-react";
 import { Noto_Sans_Tamil } from "next/font/google";
 
-import Navigation from "../components/Navigation";
-import Footer from "../components/Footer";
+import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
 
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
