@@ -56,7 +56,7 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                         {/* ⚡ Right: Login Interactive CTA Unit */}
                         <div className="flex items-center flex-shrink-0">
                             <Link
-                                href="/auth"
+                                href="/auth/login-site"
                                 className="relative inline-flex items-center gap-2 overflow-hidden bg-stone-900 hover:bg-stone-800 text-white px-4 py-2 rounded-xl text-xs font-bold font-sans tracking-wide transition-all duration-300 border border-stone-950/20 active:scale-95 group shadow-xs hover:shadow-[0_4px_20px_rgba(217,119,6,0.15)]"
                             >
                                 {/* Moving Amber Ambient Light Glare Effect on Hover */}
