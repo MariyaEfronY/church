@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BookOpen, Flame, Bell } from "lucide-react";
+import { BookOpen, Flame, Bell, CalendarDays, MapPin } from "lucide-react";
 
 interface DevotionCardsProps {
     lang: "en" | "ta";
@@ -10,10 +10,9 @@ interface DevotionCardsProps {
 
 export default function DevotionCards({ lang, t }: DevotionCardsProps) {
     const [verseData, setVerseData] = useState({ text: "", reference: "" });
-    const [announcements, setAnnouncements] = useState<string[]>([]);
+    const [eventsList, setEventsList] = useState<any[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // 1. Fetch Dynamic Bible Verse from Oldest Existing Route
     useEffect(() => {
         const fetchCurrentVerse = async () => {
             try {
@@ -21,148 +20,137 @@ export default function DevotionCards({ lang, t }: DevotionCardsProps) {
                 const result = await res.json();
                 if (result.success && Array.isArray(result.data) && result.data.length > 0) {
                     const activeVerse = result.data.find((v: any) => v.isTodayVerse) || result.data[0];
-                    setVerseData({
-                        text: activeVerse.verseTamil,
-                        reference: activeVerse.referenceTamil
-                    });
+                    setVerseData({ text: activeVerse.verseTamil, reference: activeVerse.referenceTamil });
                 } else {
-                    setVerseData({
-                        text: "எனக்கு வலுவூட்டுகிறவராலே எல்லாவற்றையும் செய்ய எனக்கு ஆற்றல் உண்டு.",
-                        reference: "பிலிப்பியர் 4:13"
-                    });
+                    setVerseData({ text: "எனக்கு வலுவூட்டுகிறவராலே எல்லாவற்றையும் செய்ய எனக்கு ஆற்றல் உண்டு.", reference: "பிலிப்பியர் 4:13" });
                 }
             } catch (error) {
-                setVerseData({
-                    text: "எனக்கு வலுவூட்டுகிறவராலே எல்லாவற்றையும் செய்ய எனக்கு ஆற்றல் உண்டு.",
-                    reference: "பிலிப்பியர் 4:13"
-                });
+                setVerseData({ text: "எனக்கு வலுவூட்டுகிறவராலே எல்லாவற்றையும் செய்ய எனக்கு ஆற்றல் உண்டு.", reference: "பிலிப்பியர் 4:13" });
             }
         };
-
         fetchCurrentVerse();
     }, []);
 
-    // 2. Fetch All Dynamic Active Events matching your exact API response structure
     useEffect(() => {
         const fetchLatestEvents = async () => {
             try {
                 const res = await fetch("/api/priest/event");
                 const result = await res.json();
-
-                // 🌟 FIX: Extract directly from result.event to match your backend payload perfectly
-                if (result.success && Array.isArray(result.event) && result.event.length > 0) {
-
-                    // Filter down to active events if any are explicitly toggled on
+                if (result.success && Array.isArray(result.event)) {
                     const activeEvents = result.event.filter((e: any) => e.isActive !== false);
-                    const targetSource = activeEvents.length > 0 ? activeEvents : result.event;
-
-                    // Dynamically map titles using the current selected language state field keys
-                    const strings = targetSource.map((e: any) => {
-                        if (lang === "en") {
-                            return e.titleEnglish || e.titleTamil;
-                        } else {
-                            return e.titleTamil || e.titleEnglish;
-                        }
-                    }).filter(Boolean);
-
-                    setAnnouncements(strings.length > 0 ? strings : [t.feastBanner]);
-                } else {
-                    setAnnouncements([t.feastBanner]);
+                    setEventsList(activeEvents.length > 0 ? activeEvents : result.event);
                 }
             } catch (error) {
-                console.error("Event fetch exception:", error);
-                setAnnouncements([t.feastBanner]);
+                console.error(error);
             }
         };
-
         fetchLatestEvents();
-        setCurrentIndex(0); // Safely reset index bounds when global toggles switch layout strings
-    }, [lang, t.feastBanner]);
+        setCurrentIndex(0);
+    }, []);
 
-    // 3. Automated Slider Loop for Carousel Indicators
     useEffect(() => {
-        if (announcements.length <= 1) return;
-
+        if (eventsList.length <= 1) return;
         const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % announcements.length);
-        }, 4000);
-
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % eventsList.length);
+        }, 5000);
         return () => clearInterval(interval);
-    }, [announcements]);
+    }, [eventsList]);
 
-    // Secondary Constant Localized Info
     const saintName = lang === "en" ? "St. Thérèse of Lisieux" : "புனித சின்னப் புஷ்பம் (தெரசா)";
-    const saintDesc = lang === "en"
-        ? "Known for her 'little way' of doing ordinary tasks with extraordinary love."
-        : "அசாதாரணமான அன்புடன் சாதாரண காரியங்களைச் செய்யும் தன் 'சிறு வழி'-க்காக அறியப்பட்டவர்.";
+    const saintDesc = lang === "en" ? "Known for her 'little way' of ordinary love." : "அசாதாரணமான அன்புடன் சாதாரண காரியங்களைச் செய்யும் தன் 'சிறு வழி'-க்காக அறியப்பட்டவர்.";
+
+    const currentEvent = eventsList[currentIndex];
+    const eventDetails = currentEvent ? {
+        title: lang === "en" ? currentEvent.titleEnglish : (currentEvent.titleTamil || currentEvent.titleEnglish),
+        description: lang === "en" ? currentEvent.descriptionEnglish : (currentEvent.descriptionTamil || currentEvent.descriptionEnglish),
+        location: currentEvent.location || "",
+        date: currentEvent.eventDate ? new Date(currentEvent.eventDate).toLocaleDateString(lang === "en" ? "en-US" : "ta-IN", { day: "numeric", month: "short", year: "numeric" }) : ""
+    } : null;
 
     return (
-        <section className="-mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-30">
-            {/* CARD 1: Bible Verse (Dynamic API) */}
-            <div className="bg-slate-900/90 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-slate-800 hover:border-amber-500/30 transition-all duration-300 group flex flex-col justify-between min-h-[220px]">
+        <section className="-mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 relative z-30">
+            {/* CARD 1: Warm Gold/Amber (Bible Verse) */}
+            <div className="bg-gradient-to-br from-amber-500 via-amber-500 to-amber-600 text-stone-950 rounded-2xl p-6 shadow-xl border border-amber-400/20 flex flex-col justify-between min-h-[230px] hover:scale-[1.01] transition-transform duration-300">
                 <div>
-                    <div className="w-10 h-10 rounded-xl bg-amber-500/5 flex items-center justify-center border border-amber-500/10 mb-4 group-hover:bg-amber-500/10 transition-colors">
-                        <BookOpen className="w-5 h-5 text-amber-400" />
+                    <div className="flex justify-between items-start mb-4">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-stone-950/60">{t.dailyVerse}</span>
+                        <BookOpen className="w-5 h-5 text-stone-950/80" />
                     </div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-amber-500/70 mb-2">{t.dailyVerse}</h3>
-                    <p className="text-slate-200 font-serif italic text-base leading-relaxed line-clamp-4">
+                    <p className="font-serif font-bold italic text-base sm:text-lg leading-relaxed text-stone-950">
                         "{verseData.text}"
                     </p>
                 </div>
-                <span className="block mt-4 text-xs font-semibold tracking-wide text-amber-400/80">
-                    — {verseData.reference}
-                </span>
+                <span className="block mt-4 text-xs font-bold tracking-wide text-stone-950/70">— {verseData.reference}</span>
             </div>
 
-            {/* CARD 2: Today's Saint */}
-            <div className="bg-slate-900/90 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-slate-800 hover:border-rose-500/30 transition-all duration-300 group flex flex-col min-h-[220px]">
-                <div className="w-10 h-10 rounded-xl bg-rose-500/5 flex items-center justify-center border border-rose-500/10 mb-4 group-hover:bg-rose-500/10 transition-colors">
-                    <Flame className="w-5 h-5 text-rose-400" />
+            {/* CARD 2: Liturgical Crimson (Saint of Day) */}
+            <div className="bg-gradient-to-br from-red-600 via-red-600 to-rose-700 text-white rounded-2xl p-6 shadow-xl border border-red-500/20 flex flex-col min-h-[230px] hover:scale-[1.01] transition-transform duration-300">
+                <div className="flex justify-between items-start mb-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-red-100/60">{t.todaysSaint}</span>
+                    <Flame className="w-5 h-5 text-red-100/90" />
                 </div>
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-rose-500/70 mb-2">{t.todaysSaint}</h3>
-                <p className="text-slate-100 font-serif font-bold text-lg leading-tight">{saintName}</p>
-                <p className="text-slate-400 text-xs mt-2 leading-relaxed font-light">{saintDesc}</p>
+                <p className="font-serif font-extrabold text-lg sm:text-xl text-white tracking-wide leading-tight">{saintName}</p>
+                <p className="text-red-50 text-xs mt-2.5 leading-relaxed font-light">{saintDesc}</p>
             </div>
 
-            {/* CARD 3: Dynamic Sliding Announcement (Auto Fixed mapping) */}
-            <div className="bg-slate-900/90 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-slate-800 hover:border-indigo-500/30 transition-all duration-300 group flex flex-col min-h-[220px] justify-between">
+            {/* CARD 3: Altar Blue (Dynamic Scrolling Event Hub) */}
+            <div className="bg-gradient-to-br from-indigo-700 via-indigo-700 to-blue-800 text-white rounded-2xl p-6 shadow-xl border border-indigo-600/20 flex flex-col min-h-[230px] justify-between hover:scale-[1.01] transition-transform duration-300">
                 <div>
-                    <div className="w-10 h-10 rounded-xl bg-indigo-500/5 flex items-center justify-center border border-indigo-500/10 mb-4 group-hover:bg-indigo-500/10 transition-colors">
-                        <Bell className="w-5 h-5 text-indigo-400" />
+                    <div className="flex justify-between items-start mb-3">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-indigo-200/70">
+                            {lang === "en" ? "Parish Announcement" : "பங்கு அறிவிப்பு"}
+                        </span>
+                        <Bell className="w-5 h-5 text-indigo-100/90" />
                     </div>
-                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-indigo-500/70 mb-2">
-                        {lang === "en" ? "Parish Announcement" : "பங்கு அறிவிப்பு"}
-                    </h3>
 
-                    <div className="relative overflow-hidden min-h-[80px] flex items-center">
-                        {announcements.length === 0 ? (
-                            <p className="text-slate-400 text-sm italic animate-pulse">
-                                {lang === "en" ? "Loading messages..." : "அறிவிப்புகள் ஏற்றப்படுகிறது..."}
+                    <div className="relative min-h-[95px] flex flex-col justify-center">
+                        {eventsList.length === 0 ? (
+                            <p className="text-indigo-200 text-xs italic animate-pulse">
+                                {lang === "en" ? "Loading announcements..." : "அறிவிப்புகள் ஏற்றப்படுகிறது..."}
                             </p>
                         ) : (
-                            <p key={`${currentIndex}-${lang}`} className="text-slate-200 font-serif text-base font-medium leading-relaxed transition-all duration-500 line-clamp-3 animate-fade-in">
-                                {announcements[currentIndex]}
-                            </p>
+                            <div key={`${currentIndex}-${lang}`} className="animate-fade-in flex flex-col gap-1.5">
+                                <h4 className="font-serif text-base sm:text-lg font-bold tracking-wide line-clamp-1 text-white">
+                                    {eventDetails?.title}
+                                </h4>
+                                {eventDetails?.description && (
+                                    <p className="text-indigo-100 text-xs leading-relaxed line-clamp-2 font-light">
+                                        {eventDetails.description}
+                                    </p>
+                                )}
+                                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-[11px] text-indigo-200">
+                                    {eventDetails?.date && (
+                                        <span className="flex items-center gap-1 font-medium text-amber-300">
+                                            <CalendarDays className="w-3.5 h-3.5" />
+                                            {eventDetails.date}
+                                        </span>
+                                    )}
+                                    {eventDetails?.location && (
+                                        <span className="flex items-center gap-1 opacity-90">
+                                            <MapPin className="w-3.5 h-3.5" />
+                                            {eventDetails.location}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 text-[10px] text-indigo-400/80 uppercase font-medium tracking-wider">
-                        <span className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-ping" />
-                        {lang === "en" ? "Latest Update" : "புதிய தகவல்"}
+                <div className="mt-3 pt-2 border-t border-indigo-600/40 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1 text-[10px] text-indigo-200/90 font-bold uppercase tracking-wider">
+                        <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping" />
+                        {lang === "en" ? "Live Feed" : "புதிய தகவல்"}
                     </span>
 
-                    {/* Carousel Indicators Slider dots */}
-                    {announcements.length > 1 && (
-                        <div className="flex gap-1.5">
-                            {announcements.map((_, dotIdx) => (
+                    {eventsList.length > 1 && (
+                        <div className="flex gap-1">
+                            {eventsList.map((_, dotIdx) => (
                                 <button
                                     key={dotIdx}
                                     onClick={() => setCurrentIndex(dotIdx)}
-                                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${dotIdx === currentIndex ? "bg-indigo-400 w-3" : "bg-slate-700 hover:bg-slate-500"
+                                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${dotIdx === currentIndex ? "bg-white w-3" : "bg-indigo-900/60 hover:bg-white/50"
                                         }`}
-                                    aria-label={`Go to slide ${dotIdx + 1}`}
                                 />
                             ))}
                         </div>

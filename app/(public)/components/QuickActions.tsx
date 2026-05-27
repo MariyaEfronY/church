@@ -4,42 +4,55 @@ import { Heart, Flame, Tv, Phone } from "lucide-react";
 
 interface QuickActionsProps {
     t: any;
+    lang: "en" | "ta";
 }
 
-export default function QuickActions({ t }: QuickActionsProps) {
+export default function QuickActions({ t, lang }: QuickActionsProps) {
     return (
         <section className="max-w-5xl mx-auto px-4 pt-20">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Donate Portal */}
-                <a href="#donate" className="flex flex-col items-center justify-center text-center p-6 bg-slate-900/40 border border-slate-850 rounded-2xl shadow-md hover:border-amber-500/40 hover:bg-slate-900/80 hover:translate-y-[-2px] transition-all duration-300 gap-3 group">
-                    <div className="w-11 h-11 bg-amber-500/5 rounded-xl flex items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-slate-950 border border-amber-500/10 transition-colors duration-300">
-                        <Heart className="w-5 h-5" />
+                {/* DONATE */}
+                <a href="#donate" className="group p-5 bg-stone-50 border border-stone-200 rounded-2xl shadow-xs hover:border-amber-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-12 h-12 bg-amber-500 rounded-xl flex flex-col items-center justify-center text-stone-950 font-black shadow-sm group-hover:scale-105 transition-transform">
+                        <Heart className="w-5 h-5 fill-stone-950" />
                     </div>
-                    <span className="font-semibold text-xs md:text-sm text-slate-300 tracking-wider uppercase font-serif">{t.actions.donate}</span>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-black tracking-wider text-stone-800 uppercase font-sans">{lang === 'en' ? 'Donate' : 'நன்கொடை'}</span>
+                        <span className="text-[10px] font-medium text-stone-400 font-serif lowercase italic">{t.actions.donate}</span>
+                    </div>
                 </a>
 
-                {/* Prayer Request Portal */}
-                <a href="#prayer" className="flex flex-col items-center justify-center text-center p-6 bg-slate-900/40 border border-slate-850 rounded-2xl shadow-md hover:border-red-500/40 hover:bg-slate-900/80 hover:translate-y-[-2px] transition-all duration-300 gap-3 group">
-                    <div className="w-11 h-11 bg-red-500/5 rounded-xl flex items-center justify-center text-red-400 group-hover:bg-red-500 group-hover:text-white border border-red-500/10 transition-colors duration-300">
-                        <Flame className="w-5 h-5" />
+                {/* PRAYER */}
+                <a href="#prayer" className="group p-5 bg-stone-50 border border-stone-200 rounded-2xl shadow-xs hover:border-red-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-12 h-12 bg-red-600 rounded-xl flex flex-col items-center justify-center text-white font-black shadow-sm group-hover:scale-105 transition-transform">
+                        <Flame className="w-5 h-5 fill-white" />
                     </div>
-                    <span className="font-semibold text-xs md:text-sm text-slate-300 tracking-wider uppercase font-serif">{t.actions.prayerRequest}</span>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-black tracking-wider text-stone-800 uppercase font-sans">{lang === 'en' ? 'Prayer Request' : 'ஜெப விண்ணப்பம்'}</span>
+                        <span className="text-[10px] font-medium text-stone-400 font-serif lowercase italic">{t.actions.prayerRequest}</span>
+                    </div>
                 </a>
 
-                {/* Live Portal */}
-                <a href="#live" className="flex flex-col items-center justify-center text-center p-6 bg-slate-900/40 border border-slate-850 rounded-2xl shadow-md hover:border-indigo-500/40 hover:bg-slate-900/80 hover:translate-y-[-2px] transition-all duration-300 gap-3 group">
-                    <div className="w-11 h-11 bg-indigo-500/5 rounded-xl flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white border border-indigo-500/10 transition-colors duration-300">
+                {/* WATCH LIVE */}
+                <a href="#live" className="group p-5 bg-stone-50 border border-stone-200 rounded-2xl shadow-xs hover:border-indigo-600 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-12 h-12 bg-indigo-700 rounded-xl flex flex-col items-center justify-center text-white font-black shadow-sm group-hover:scale-105 transition-transform">
                         <Tv className="w-5 h-5" />
                     </div>
-                    <span className="font-semibold text-xs md:text-sm text-slate-300 tracking-wider uppercase font-serif">{t.actions.watchLive}</span>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-black tracking-wider text-stone-800 uppercase font-sans">{lang === 'en' ? 'Watch Live' : 'நேரலை'}</span>
+                        <span className="text-[10px] font-medium text-stone-400 font-serif lowercase italic">{t.actions.watchLive}</span>
+                    </div>
                 </a>
 
-                {/* Contact Portal */}
-                <a href="#contact" className="flex flex-col items-center justify-center text-center p-6 bg-slate-900/40 border border-slate-850 rounded-2xl shadow-md hover:border-slate-500/40 hover:bg-slate-900/80 hover:translate-y-[-2px] transition-all duration-300 gap-3 group">
-                    <div className="w-11 h-11 bg-slate-500/5 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-slate-100 group-hover:text-slate-950 border border-slate-500/10 transition-colors duration-300">
-                        <Phone className="w-5 h-5" />
+                {/* CONTACT */}
+                <a href="#contact" className="group p-5 bg-stone-50 border border-stone-200 rounded-2xl shadow-xs hover:border-stone-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-12 h-12 bg-stone-700 rounded-xl flex flex-col items-center justify-center text-white font-black shadow-sm group-hover:scale-105 transition-transform">
+                        <Phone className="w-5 h-5 fill-white" />
                     </div>
-                    <span className="font-semibold text-xs md:text-sm text-slate-300 tracking-wider uppercase font-serif">{t.actions.contact}</span>
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-xs font-black tracking-wider text-stone-800 uppercase font-sans">{lang === 'en' ? 'Contact' : 'தொடர்பு'}</span>
+                        <span className="text-[10px] font-medium text-stone-400 font-serif lowercase italic">{t.actions.contact}</span>
+                    </div>
                 </a>
             </div>
         </section>
