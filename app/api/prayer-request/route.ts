@@ -5,29 +5,33 @@ import PrayerRequest from "@/models/PrayerRequest";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { intention, lang, paymentStatus, amountPaid, paymentIntentId } =
-      await req.json();
+    const {
+      intention,
+      candidateNames,
+      deliveredAt,
+      lang,
+      paymentStatus,
+      amountPaid,
+      paymentIntentId,
+    } = await req.json();
 
-    if (!intention || intention.trim() === "") {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            lang === "ta"
-              ? "ஜெப விண்ணப்ப உரை தேவை."
-              : "Prayer intention text is required.",
-        },
-        { status: 400 },
-      );
-    }
+    // Process candidate names array (filter out empty inputs if submitted from multi-input UI fields)
+    const sanitizedCandidates = Array.isArray(candidateNames)
+      ? candidateNames
+          .map((name: string) => name.trim())
+          .filter((name: string) => name !== "")
+      : [];
 
-    // Persist records to MongoDB with optional payment variables
+    // Persist records to MongoDB matching the unrequired schema structure
     const newRequest = await PrayerRequest.create({
-      intention: intention.trim(),
+      intention: intention ? intention.trim() : "",
+      candidateNames: sanitizedCandidates,
+      deliveredAt: deliveredAt ? new Date(deliveredAt) : null,
       lang: lang || "en",
       paymentStatus: paymentStatus || "None",
       amountPaid: amountPaid || 0,
       paymentIntentId: paymentIntentId || null,
+      priestStatus: "Pending", // Explicit initial state fallback
     });
 
     return NextResponse.json(
