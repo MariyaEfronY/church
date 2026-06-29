@@ -6,6 +6,9 @@ import DevotionCards from "./components/DevotionCards";
 import LiturgicalTimings from "./components/LiturgicalTimings";
 import QuickActions from "./components/QuickActions";
 import YoutubeVideos from "./components/YoutubeVideos";
+import AboutSection from "./components/AboutSection";
+import GallerySection from "./components/GallerySection";
+import TestimonialSection from "./components/TestimonialSection";
 
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
@@ -35,16 +38,35 @@ export default function PublicHomePage() {
             {/* 1. Alabaster White Header */}
             <HeroBanner lang={lang} t={t} />
 
+
             {/* 2. Overlapping Radiant Color Blocks */}
             <div className="relative z-30 max-w-6xl mx-auto px-4 sm:px-6">
                 <DevotionCards lang={lang} t={t} />
             </div>
 
+            {/* UPGRADE: Styled Wrapper for About Section with perfect spacing & width constraints */}
+            <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
+                <AboutSection />
+            </div>
+
+            {/* Optional Wrappers for Gallery and Testimonials if they need alignment too */}
+            <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
+                <GallerySection />
+            </div>
+
+            <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
+                <TestimonialSection />
+            </div>
+
             {/* 3. Minimal Timings Grid */}
-            <LiturgicalTimings lang={lang} t={t} />
+            <div className="mt-20 md:mt-32">
+                <LiturgicalTimings lang={lang} t={t} />
+            </div>
 
             {/* 4. Elegant Dynamic Utility Grid */}
-            <QuickActions t={t} lang={lang} />
+            <div className="mt-20">
+                <QuickActions t={t} lang={lang} />
+            </div>
 
             <YoutubeVideos />
         </div>
