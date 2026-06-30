@@ -2,21 +2,30 @@
 
 import { LangProvider, useLang } from "@/context/LangContext";
 import { Languages } from "lucide-react";
-import { Noto_Sans_Tamil } from "next/font/google";
+import { Noto_Sans_Tamil, Inter } from "next/font/google"; // <-- Add a native Latin font
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
+// Configure Latin Sub-Family
+const interFont = Inter({
+    subsets: ["latin"],
+    variable: "--font-inter", // Creates a clean configuration token
+});
+
+// Configure Tamil Sub-Family
 const tamilFont = Noto_Sans_Tamil({
     subsets: ["tamil"],
     weight: ["400", "500", "700"],
+    variable: "--font-noto-tamil", // Creates a clean configuration token
 });
 
-// A small sub-wrapper component to keep cleaner control of layout structure hooks
 function LayoutContent({ children }: { children: React.ReactNode }) {
     const { lang, t, toggleLanguage } = useLang();
 
     return (
-        <div className={`${tamilFont.className} min-h-screen flex flex-col justify-between bg-[#0f0a0a]`}>
+        /* Combine both CSS variables here, along with your default tailwind classes */
+        <div className={`${interFont.variable} ${tamilFont.variable} font-sans min-h-screen flex flex-col justify-between bg-[#0f0a0a]`}>
+
             {/* Floating Language Switch Button */}
             <div className="fixed bottom-6 right-6 z-50">
                 <button
