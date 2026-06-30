@@ -19,5 +19,40 @@
   "todaysSaint": "Today's Saint",
   "thoughtOfDay": "Thought of the Day",
   "adminTitle": "Arokiya Madha Panel",
-  "adminWelcome": "Parish Administration Center"
+  "adminWelcome": "Parish Administration Center",
+  "subVillages": {
+    "title": "Parish Jurisdictions",
+    "subtitle": "Sub-Villages & Custom Substations Directory",
+    "badgeConnected": "Substations Registered",
+    "menuHeader": "Explore Substations",
+    "menuSub": "Local Profiles",
+    "totalSuffix": "Total",
+    "patronLabel": "Patron",
+    "list": [
+      {
+        "name": "Anthoniyarpuram",
+        "distance": "1.2 km away",
+        "families": "210 Families",
+        "patron": "St. Anthony of Padua",
+        "established": "Est. 1948",
+        "desc": "Known for its historic shrine and vibrant traditional choral ministry. The community gathers weekly for solemn novenas and coordinates the historic annual chariot procession that draws pilgrims from across the region."
+      },
+      {
+        "name": "Usillankadu",
+        "distance": "3.5 km away",
+        "families": "125 Families",
+        "patron": "Our Lady of Good Health",
+        "established": "Est. 1965",
+        "desc": "A beautiful, serene community nestled near nature. Usillankadu boasts an active family prayer circle network (Anbiyam) and a newly renovated grotto dedicated to comforting the sick and homebound."
+      },
+      {
+        "name": "Pathakadu",
+        "distance": "5.1 km away",
+        "families": "88 Families",
+        "patron": "St. Joseph the Worker",
+        "established": "Est. 1982",
+        "desc": "A dedicated labor-community hub with a deep commitment to social outreach. Pathakadu organizes the parish's seasonal agricultural blessing festivals and hosts the combined evening educational study circles for children."
+      }
+    ]
+  }
 }

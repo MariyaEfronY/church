@@ -9,6 +9,7 @@ import YoutubeVideos from "./components/YoutubeVideos";
 import AboutSection from "./components/AboutSection";
 import GallerySection from "./components/GallerySection";
 import TestimonialSection from "./components/TestimonialSection";
+import SubVillage from "./components/SubVillage"
 
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
@@ -57,6 +58,11 @@ export default function PublicHomePage() {
             <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
                 <TestimonialSection />
             </div>
+
+            <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
+                <SubVillage t={t} />
+            </div>
+
 
             {/* 3. Minimal Timings Grid */}
             <div className="mt-20 md:mt-32">
