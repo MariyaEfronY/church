@@ -9,7 +9,8 @@ import YoutubeVideos from "./components/YoutubeVideos";
 import AboutSection from "./components/AboutSection";
 import GallerySection from "./components/GallerySection";
 import TestimonialSection from "./components/TestimonialSection";
-import SubVillage from "./components/SubVillage"
+import SubVillage from "./components/SubVillage";
+import ScrollReveal from "./components/ScrollReveal"; // <-- Import GSAP Wrapper
 
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
@@ -36,45 +37,62 @@ export default function PublicHomePage() {
 
     return (
         <div className="pb-24 bg-stone-100 text-stone-900 min-h-screen font-sans antialiased selection:bg-amber-600/20 selection:text-amber-900">
-            {/* 1. Alabaster White Header */}
+            {/* 1. Hero Entrance */}
             <HeroBanner lang={lang} t={t} />
 
-
-            {/* 2. Overlapping Radiant Color Blocks */}
+            {/* 2. Cards (Slightly overlapping Hero) */}
             <div className="relative z-30 max-w-6xl mx-auto px-4 sm:px-6">
-                <DevotionCards lang={lang} t={t} />
+                <ScrollReveal direction="up" delay={0.2}>
+                    <DevotionCards lang={lang} t={t} />
+                </ScrollReveal>
             </div>
 
-            {/* UPGRADE: Styled Wrapper for About Section with perfect spacing & width constraints */}
+            {/* 3. About Section */}
             <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
-                <AboutSection />
+                <ScrollReveal direction="up">
+                    <AboutSection />
+                </ScrollReveal>
             </div>
 
-            {/* Optional Wrappers for Gallery and Testimonials if they need alignment too */}
+            {/* 4. Gallery Layout */}
             <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
-                <GallerySection />
+                <ScrollReveal direction="left">
+                    <GallerySection />
+                </ScrollReveal>
             </div>
 
+            {/* 5. Testimonial Carousel */}
             <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
-                <TestimonialSection />
+                <ScrollReveal direction="right">
+                    <TestimonialSection />
+                </ScrollReveal>
             </div>
 
+            {/* 6. Sub-Villages Hub (Interactive Component) */}
             <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
-                <SubVillage t={t} />
+                <ScrollReveal direction="up">
+                    <SubVillage t={t} />
+                </ScrollReveal>
             </div>
 
-
-            {/* 3. Minimal Timings Grid */}
+            {/* 7. Timings Structure */}
             <div className="mt-20 md:mt-32">
-                <LiturgicalTimings lang={lang} t={t} />
+                <ScrollReveal direction="up">
+                    <LiturgicalTimings lang={lang} t={t} />
+                </ScrollReveal>
             </div>
 
-            {/* 4. Elegant Dynamic Utility Grid */}
+            {/* 8. Quick Actions Utility Grid */}
             <div className="mt-20">
-                <QuickActions t={t} lang={lang} />
+                <ScrollReveal direction="up">
+                    <QuickActions t={t} lang={lang} />
+                </ScrollReveal>
             </div>
 
-            <YoutubeVideos />
+            {/* 9. YouTube Video Frame Embeds */}
+            <ScrollReveal direction="up">
+                <YoutubeVideos />
+            </ScrollReveal>
         </div>
     );
 }
