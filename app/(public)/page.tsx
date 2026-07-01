@@ -57,7 +57,8 @@ export default function PublicHomePage() {
             {/* 4. Gallery Layout */}
             <div className="mt-20 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6">
                 <ScrollReveal direction="left">
-                    <GallerySection />
+                    {/* Pass down lang and t metrics cleanly here */}
+                    <GallerySection lang={lang} t={t} />
                 </ScrollReveal>
             </div>
 
