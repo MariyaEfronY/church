@@ -24,7 +24,9 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
     return (
         /* Combine both CSS variables here, along with your default tailwind classes */
-        <div className={`${interFont.variable} ${tamilFont.variable} font-sans min-h-screen flex flex-col justify-between bg-[#0f0a0a]`}>
+        <div
+            className={`${interFont.variable} ${tamilFont.variable} font-sans min-h-screen flex flex-col justify-between bg-white`}
+        >
 
             {/* Floating Language Switch Button */}
             <div className="fixed bottom-6 right-6 z-50">
