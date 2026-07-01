@@ -31,7 +31,8 @@ export default function Navigation({ parishName, adminText }: NavProps) {
             if (element) {
                 setMobileMenuOpen(false);
 
-                const offset = isScrolled ? 70 : 90;
+                // Smoothed out offset calculation for the fixed navbar profile
+                const offset = isScrolled ? 75 : 95;
                 const bodyRect = document.body.getBoundingClientRect().top;
                 const elementRect = element.getBoundingClientRect().top;
                 const elementPosition = elementRect - bodyRect;
@@ -75,16 +76,23 @@ export default function Navigation({ parishName, adminText }: NavProps) {
     ];
 
     return (
-        /* FIXED: Changed from pointer-events-none to normal interaction flow so mobile menus register clicks */
-        <div className="sticky top-0 left-0 right-0 z-50 w-full max-w-full transition-all duration-300 ease-out overflow-x-clip">
-            {/* Nav Padding Frame Box */}
-            <div className={`mx-auto px-4 sm:px-6 transition-all duration-500 ease-in-out ${isScrolled ? "pt-2 max-w-5xl" : "pt-4 max-w-6xl"
+        /* CHANGED: Changed from 'sticky' to 'fixed' to force it to stay on top through the entire scrolling experience */
+        <div className={`fixed top-0 left-0 right-0 z-50 w-full max-w-full transition-all duration-500 ease-in-out overflow-x-clip ${isScrolled ? "bg-transparent" : "bg-stone-100/10 backdrop-blur-sm"
+            }`}>
+
+            {/* Dynamic Padding Frame Wrapper */}
+            <div className={`mx-auto px-4 sm:px-6 transition-all duration-500 ease-in-out ${isScrolled ? "pt-2 pb-2 max-w-5xl" : "pt-4 pb-0 max-w-6xl"
                 }`}>
-                {/* FIXED: Restored consistent styling parameters to maintain full height properties */}
-                <nav className={`border transition-all duration-500 ease-in-out ${isScrolled
-                    ? "bg-white/80 backdrop-blur-xl border-stone-200/60 shadow-[0_12px_30px_rgba(0,0,0,0.06)] rounded-2xl px-4 py-2"
-                    : "bg-white/60 backdrop-blur-md border-white/80 shadow-[0_4px_20px_rgba(0,0,0,0.02)] rounded-3xl px-4 sm:px-6 py-4"
-                    }`}>
+
+                {/* Morphing Nav Panel with Old Rounded Style */}
+                <motion.nav
+                    layout
+                    transition={{ type: "spring", stiffness: 240, damping: 28 }}
+                    className={`border border-stone-200/60 transition-all duration-500 backdrop-blur-md ${isScrolled
+                        ? "bg-white/90 shadow-[0_12px_30px_rgba(0,0,0,0.06)] rounded-2xl px-4 py-2"
+                        : "bg-white/80 shadow-[0_4px_25px_rgba(0,0,0,0.01)] rounded-3xl px-4 sm:px-6 py-4"
+                        }`}
+                >
                     <div className="flex justify-between items-center gap-2 sm:gap-4 min-w-0">
 
                         {/* 🏛️ Left: Branding Section */}
@@ -99,6 +107,7 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                             }}
                         >
                             <motion.div
+                                layout="position"
                                 className={`rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-500/20 transition-all duration-300 flex-shrink-0 ${isScrolled ? "w-7 h-7 sm:w-8 h-8" : "w-9 h-9 sm:w-10 h-10"
                                     }`}
                                 whileHover={{ scale: 1.05, rotate: -2 }}
@@ -107,13 +116,16 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                                 <Church className={`text-amber-700 transition-colors ${isScrolled ? "w-3.5 h-3.5 sm:w-4 h-4" : "w-4 h-4 sm:w-5 h-5"}`} />
                             </motion.div>
 
-                            <span className={`font-serif font-black text-stone-900 tracking-wide truncate group-hover:text-amber-900 transition-all duration-300 ${isScrolled ? "text-xs sm:text-sm" : "text-sm sm:text-base"
-                                }`}>
+                            <motion.span
+                                layout="position"
+                                className={`font-serif font-black text-stone-900 tracking-wide truncate group-hover:text-amber-900 transition-all duration-300 ${isScrolled ? "text-xs sm:text-sm" : "text-sm sm:text-base"
+                                    }`}
+                            >
                                 {parishName}
-                            </span>
+                            </motion.span>
                         </Link>
 
-                        {/* 🌐 Center: Desktop Smooth Dropdown Menus */}
+                        {/* 🌐 Center: Desktop Menus */}
                         <div className="hidden md:flex items-center gap-1">
                             {menuItems.map((item, idx) => (
                                 <div key={idx} className="relative group/menu py-1">
@@ -145,9 +157,8 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                             ))}
                         </div>
 
-                        {/* ⚡ Right: Desktop Login OR Mobile Toggle Trigger */}
+                        {/* ⚡ Right: Desktop Login / Mobile Menu Trigger */}
                         <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                            {/* FIXED: Added 'hidden md:inline-flex' to completely remove login button here on mobile */}
                             <Link
                                 href="/auth/login-site"
                                 className={`hidden md:inline-flex relative items-center gap-1.5 overflow-hidden bg-[#4a0e17] hover:bg-[#3a0a10] text-white rounded-xl font-bold font-sans tracking-wide transition-all duration-300 active:scale-95 group shadow-sm ${isScrolled ? "px-3 py-1.5 text-xs" : "px-4 py-2.5 text-xs"
@@ -168,22 +179,22 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                         </div>
 
                     </div>
-                </nav>
+                </motion.nav>
             </div>
 
-            {/* 📱 Mobile Dropdown Accordion Menu Drawer */}
+            {/* 📱 Mobile Dropdown Drawer */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -15, scale: 0.98 }}
+                        initial={{ opacity: 0, y: -10, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -15, scale: 0.98 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 28 }}
                         className="absolute top-full left-0 w-full px-4 pt-2 md:hidden"
                     >
                         <div className="bg-white/95 backdrop-blur-xl border border-stone-200/80 shadow-2xl rounded-2xl p-4 space-y-5 max-h-[75vh] overflow-y-auto">
 
-                            {/* FIXED: Injected Login button cleanly at the top of the mobile drawer stack */}
+                            {/* Login item inside mobile burger drawer panel */}
                             <div className="pt-1 pb-2 border-b border-stone-100">
                                 <Link
                                     href="/auth/login-site"
