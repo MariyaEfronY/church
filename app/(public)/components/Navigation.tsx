@@ -76,12 +76,11 @@ export default function Navigation({ parishName, adminText }: NavProps) {
     ];
 
     return (
-        /* CHANGED: Changed from 'sticky' to 'fixed' to force it to stay on top through the entire scrolling experience */
-        <div className={`fixed top-0 left-0 right-0 z-50 w-full max-w-full transition-all duration-500 ease-in-out overflow-x-clip ${isScrolled ? "bg-transparent" : "bg-stone-100/10 backdrop-blur-sm"
+        <div className={`fixed top-0 left-0 right-0 z-50 w-full max-w-full transition-all duration-500 ease-in-out overflow-x-clip ${isScrolled ? "bg-transparent backdrop-blur-none pointer-events-none" : "bg-stone-100/10 backdrop-blur-sm"
             }`}>
 
             {/* Dynamic Padding Frame Wrapper */}
-            <div className={`mx-auto px-4 sm:px-6 transition-all duration-500 ease-in-out ${isScrolled ? "pt-2 pb-2 max-w-5xl" : "pt-4 pb-0 max-w-6xl"
+            <div className={`mx-auto px-4 sm:px-6 transition-all duration-500 ease-in-out pointer-events-auto ${isScrolled ? "pt-2 pb-2 max-w-5xl" : "pt-4 pb-0 max-w-6xl"
                 }`}>
 
                 {/* Morphing Nav Panel with Old Rounded Style */}
@@ -190,35 +189,26 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.98 }}
                         transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                        className="absolute top-full left-0 w-full px-4 pt-2 md:hidden"
+                        className="absolute top-full left-0 w-full px-4 pt-2 md:hidden pointer-events-auto"
                     >
-                        <div className="bg-white/95 backdrop-blur-xl border border-stone-200/80 shadow-2xl rounded-2xl p-4 space-y-5 max-h-[75vh] overflow-y-auto">
+                        {/* CHANGED: Adjusted inner gaps to make spacing much more compact */}
+                        <div className="bg-white/95 backdrop-blur-xl border border-stone-200/80 shadow-2xl rounded-2xl p-3.5 space-y-3 max-h-[80vh] overflow-y-auto">
 
-                            {/* Login item inside mobile burger drawer panel */}
-                            <div className="pt-1 pb-2 border-b border-stone-100">
-                                <Link
-                                    href="/auth/login-site"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="relative flex items-center justify-center gap-2 w-full overflow-hidden bg-[#4a0e17] hover:bg-[#3a0a10] text-white rounded-xl font-bold font-sans tracking-wide py-3 text-xs transition-all duration-300 active:scale-[0.98] shadow-md group"
-                                >
-                                    <LogIn className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                                    <span>{adminText || "Login"}</span>
-                                </Link>
-                            </div>
-
+                            {/* Menu Links organized in tight groupings */}
                             {menuItems.map((item, idx) => (
-                                <div key={idx} className="space-y-1.5">
-                                    <div className="flex items-center gap-2 text-stone-400 px-1">
+                                <div key={idx} className="space-y-1">
+                                    <div className="flex items-center gap-1.5 text-stone-400 px-1">
                                         {item.icon}
-                                        <span className="text-[10px] font-bold uppercase tracking-widest">{item.title}</span>
+                                        <span className="text-[9px] font-bold uppercase tracking-widest">{item.title}</span>
                                     </div>
-                                    <div className="grid grid-cols-1 gap-1 pl-4">
+                                    {/* CHANGED: Transformed links list into a compact 2-column grid layout */}
+                                    <div className="grid grid-cols-2 gap-1.5">
                                         {item.submenu.map((sub, sIdx) => (
                                             <Link
                                                 key={sIdx}
                                                 href={sub.href}
                                                 onClick={(e) => handleScrollToSection(e, sub.href)}
-                                                className="block p-2.5 rounded-xl text-xs font-bold text-stone-700 bg-stone-50/60 hover:bg-amber-50 hover:text-amber-900 transition-all"
+                                                className="block p-2 text-center rounded-lg text-[11px] font-bold text-stone-700 bg-stone-50/70 hover:bg-amber-50 hover:text-amber-900 transition-all border border-stone-100 truncate"
                                             >
                                                 {sub.name}
                                             </Link>
@@ -226,6 +216,19 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                                     </div>
                                 </div>
                             ))}
+
+                            {/* CHANGED: Relocated Login Item to the bottom of the drawer wrapper container */}
+                            <div className="pt-2.5 border-t border-stone-100">
+                                <Link
+                                    href="/auth/login-site"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="relative flex items-center justify-center gap-2 w-full overflow-hidden bg-[#4a0e17] hover:bg-[#3a0a10] text-white rounded-xl font-bold font-sans tracking-wide py-2.5 text-xs transition-all duration-300 active:scale-[0.98] shadow-md group"
+                                >
+                                    <LogIn className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                                    <span>{adminText || "Login"}</span>
+                                </Link>
+                            </div>
+
                         </div>
                     </motion.div>
                 )}
