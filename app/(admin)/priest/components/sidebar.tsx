@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import {
     LayoutDashboard,
-    Users,
-    Heart,
-    FileText,
+    BookOpen,
+    Clock,
+    CalendarDays,
+    HeartHandshake,
+    Images,
+    Megaphone,
     LogOut,
     ChevronRight,
     Settings,
@@ -70,15 +73,15 @@ export default function PriestSidebar({ closeMenu }: SidebarProps) {
         }
     };
 
-    // Navigation setup featuring your new dedicated Dashboard root link at index 0
+    // Correctly contextualized navigation icon system configuration
     const navigationLinks = [
-        { name: "Dashboard", href: "/priest/dashboard", icon: Church },
-        { name: "Bible Verse", href: "/priest/bible-verse", icon: LayoutDashboard },
-        { name: "Mass Timing", href: "/priest/mass-timing", icon: Users },
-        { name: "Events", href: "/priest/events", icon: Heart },
-        { name: "Prayer Requests", href: "/priest/prayer-request-priest", icon: FileText },
-        { name: "Gallery", href: "/priest/gallery-admin", icon: Church },
-        { name: "Announcements", href: "/priest/announcements", icon: Church },
+        { name: "Dashboard", href: "/priest/dashboard", icon: LayoutDashboard },
+        { name: "Bible Verse", href: "/priest/bible-verse", icon: BookOpen },
+        { name: "Mass Timing", href: "/priest/mass-timing", icon: Clock },
+        { name: "Events", href: "/priest/events", icon: CalendarDays },
+        { name: "Prayer Requests", href: "/priest/prayer-request-priest", icon: HeartHandshake },
+        { name: "Gallery", href: "/priest/gallery-admin", icon: Images },
+        { name: "Announcements", href: "/priest/announcements", icon: Megaphone },
     ];
 
     const getInitials = (fullName: string) => {
@@ -95,8 +98,8 @@ export default function PriestSidebar({ closeMenu }: SidebarProps) {
 
             {/* Classic Heritage Branding */}
             <div className="p-6 border-b border-white/10 flex-shrink-0">
-                <h2 className="font-serif text-xl font-bold tracking-wide text-amber-400">
-                    Arokiya Madha
+                <h2 className="font-serif text-xl font-bold tracking-wide text-amber-400 flex items-center gap-2">
+                    <Church className="w-5 h-5 text-amber-400 flex-shrink-0" /> Arokiya Madha
                 </h2>
                 <p className="text-xs tracking-widest uppercase text-stone-400 mt-1">
                     Priest Control Center
