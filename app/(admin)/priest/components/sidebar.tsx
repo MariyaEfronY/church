@@ -78,6 +78,7 @@ export default function PriestSidebar({ closeMenu }: SidebarProps) {
         { name: "Events", href: "/priest/events", icon: Heart },
         { name: "Prayer Requests", href: "/priest/prayer-request-priest", icon: FileText },
         { name: "Gallery", href: "/priest/gallery-admin", icon: Church },
+        { name: "Announcements", href: "/priest/announcements", icon: Church },
     ];
 
     const getInitials = (fullName: string) => {

@@ -11,6 +11,7 @@ import GallerySection from "./components/GallerySection";
 import TestimonialSection from "./components/TestimonialSection";
 import SubVillage from "./components/SubVillage";
 import ScrollReveal from "./components/ScrollReveal";
+import AnnouncementSection from "./components/AnnouncementSection";
 
 import en from "../locales/en.json";
 import ta from "../locales/ta.json";
@@ -91,6 +92,18 @@ export default function PublicHomePage() {
                     <TestimonialSection />
                 </ScrollReveal>
             </section>
+
+            {/* ================= Announcements ================= */}
+            {/* Critical: Left/Right sliding animations bleed outward. Added isolation wrappers. */}
+            <section
+                id="announcements"
+                className="mt-16 md:mt-32 max-w-6xl mx-auto px-4 sm:px-6 scroll-mt-28 w-full overflow-hidden"
+            >
+                <ScrollReveal direction="left">
+                    <AnnouncementSection />
+                </ScrollReveal>
+            </section>
+
 
             {/* ================= SUB VILLAGES ================= */}
             <section
