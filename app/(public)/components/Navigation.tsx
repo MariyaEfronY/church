@@ -107,12 +107,30 @@ export default function Navigation({ parishName, adminText }: NavProps) {
                         >
                             <motion.div
                                 layout="position"
-                                className={`rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-500/20 transition-all duration-300 flex-shrink-0 ${isScrolled ? "w-7 h-7 sm:w-8 h-8" : "w-9 h-9 sm:w-10 h-10"
+                                className={`rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-500/20 transition-all duration-300 flex-shrink-0 overflow-hidden ${isScrolled ? "w-7 h-7 sm:w-8 sm:h-8" : "w-9 h-9 sm:w-10 sm:h-10"
                                     }`}
                                 whileHover={{ scale: 1.05, rotate: -2 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <Church className={`text-amber-700 transition-colors ${isScrolled ? "w-3.5 h-3.5 sm:w-4 h-4" : "w-4 h-4 sm:w-5 h-5"}`} />
+                                <img
+                                    src="img/logo.png"
+                                    alt="Diocese Logo"
+                                    className={`object-contain transition-all duration-300 ${isScrolled ? "w-4 h-4 sm:w-5 sm:h-5" : "w-6 h-6 sm:w-7 sm:h-7"
+                                        }`}
+                                    onError={(e) => {
+                                        // Graceful fallback code: removes the missing broken image token and unhides the native icon text
+                                        e.currentTarget.style.display = 'none';
+                                        if (e.currentTarget.nextSibling) {
+                                            (e.currentTarget.nextSibling as HTMLElement).style.display = 'block';
+                                        }
+                                    }}
+                                />
+
+                                {/* Backup Fallback Icon Layer: Renders immediately if your path link breaks or fails to load */}
+                                <span className="hidden">
+                                    <Church className={`text-amber-700 transition-colors ${isScrolled ? "w-3.5 h-3.5 sm:w-4 h-4" : "w-4 h-4 sm:w-5 h-5"
+                                        }`} />
+                                </span>
                             </motion.div>
 
                             <motion.span
